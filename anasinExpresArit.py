@@ -1,14 +1,14 @@
 import re
-name = "a+(a-a)-(a/a)$"
+aceitaveis = ["+","-","*","/","IDENTIFICADOR","NUMERAL","LITERAL"]
 def erro():
 	print "EROU"
 def Tlinha(i,simbolos):
-	if(simbolos[i]=="*" or simbolos[i]=="/"):
+	if(simbolos[i][0]=="*" or simbolos[i][0]=="/"):
 		i = nextsimb(i)
 		i = F(i,simbolos)
 		i = Tlinha(i,simbolos)
 		return i
-	elif(simbolos[i]=="+" or simbolos[i]=="-" or simbolos[i]==")"or simbolos[i]=="$"):
+	elif(simbolos[i][0]=="+" or simbolos[i][0]=="-" or simbolos[i][0]==")"or simbolos[i][0] not in aceitaveis):
 		return i
 	else:
 		print i
@@ -16,19 +16,19 @@ def Tlinha(i,simbolos):
 		return i
 
 def Elinha(i,simbolos):
-	if(simbolos[i]=="+" or simbolos[i]=="-"):
+	if(simbolos[i][0]=="+" or simbolos[i][0]=="-"):
 		i = nextsimb(i)
 		i = T(i,simbolos)
 		i = Elinha(i,simbolos)
 		return i
-	elif(simbolos[i]==")"or simbolos[i]=="$"):
+	elif(simbolos[i][0]==")"or simbolos[i][0] not in aceitaveis):
 		return i
 	else:
 		erro()
 		return i
 
 def F(i,simbolos):
-	if (simbolos[i]=="("):
+	if (simbolos[i][0]=="("):
 		i = nextsimb(i)
 		i = E(i,simbolos)
 		i = nextsimb(i)
@@ -36,8 +36,7 @@ def F(i,simbolos):
 		if(simbolos[i]!=")"):
 			erro()
 			return i
-	elif(simbolos[i]=="a"):
-		#re.match(simbolos[i][0],"IDENTIFICADOR") or re.match(simbolos[i][0],"LITERAL") or re.match(simbolos[i][0],"NUMERAL")
+	elif(simbolos[i][0]=="IDENTIFICADOR" or simbolos[i][0]=="LITERAL" or simbolos[i][0]=="NUMERAL"):
 		i = nextsimb(i)
 		return i
 	else:
@@ -45,8 +44,7 @@ def F(i,simbolos):
 		return i
 
 def T(i,simbolos):
-	if( simbolos[i]=="a" or simbolos[i]=="("):
-		#simbolos[i][0]=="IDENTIFICADOR" or simbolos[i][0]=="LITERAL" or simbolos[i][0]=="NUMERAL"
+	if(simbolos[i][0]=="IDENTIFICADOR" or simbolos[i][0]=="LITERAL" or simbolos[i][0]=="NUMERAL" or simbolos[i][0]=="("):
 		i = F(i,simbolos)
 		i = Tlinha(i,simbolos)
 		return i
@@ -55,8 +53,7 @@ def T(i,simbolos):
 		return i
 
 def E(i,simbolos):
-	if (simbolos[i]=="a" or simbolos[i][0]=="("):
-		#simbolos[i][0]=="IDENTIFICADOR" or simbolos[i][0]=="LITERAL" or simbolos[i][0]=="NUMERAL"
+	if (simbolos[i][0]=="IDENTIFICADOR" or simbolos[i][0]=="LITERAL" or simbolos[i][0]=="NUMERAL" or simbolos[i][0]=="("):
 		i = T(i,simbolos)
 		i = Elinha(i,simbolos)
 		return i
@@ -68,6 +65,3 @@ def E(i,simbolos):
 def nextsimb(i):
 	i = i+1
 	return i
-
-
-E(0,name)

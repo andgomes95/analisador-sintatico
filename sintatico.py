@@ -1,3 +1,5 @@
+from program import *
+from anasinExpresArit import *
 def leituraTokens():
 	arq = open("Tokens.txt", 'r')
 	arquivos = arq.read()
@@ -30,6 +32,7 @@ while i!=len(tokens)-1:
 for i in range(len(tokens)-1):
 	print tokens[i]
 #	print len(tokens[i])
+tokens.remove("")
 i=0
 
 #COMEcA AQUI A leituraTokens

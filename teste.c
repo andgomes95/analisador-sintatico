@@ -1,1 +1,2 @@
-teste = teste + teste/(teste-teste)*teste;
+/*int */teste = teste + teste/(teste-teste)*teste;
+/*float casa,*/vaca = teste/*, dinamica*/;
