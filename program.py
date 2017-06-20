@@ -2,11 +2,9 @@ from declara import *
 from atribui import *
 def programa2(i,simbolos):
     if simbolos[i][0]==";":
-        if simbolos[i+1][0] == "}":
-            if i+1 < len(simbolos):
-                i=nextsimb(i)
+        if i+1 < len(simbolos):
+            if simbolos[i+1][0] == "}":
                 i=nextsimb(i)#para funcionar por enquanto, sem while ou if
-        elif i+1 < len(simbolos):
             i=nextsimb(i)
             i = programa(i,simbolos)
     else:
