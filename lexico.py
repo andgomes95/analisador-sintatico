@@ -103,7 +103,7 @@ def conferirOperadores(linha,coluna,codigo,i):
 	for j in range(0,len(operador)):
 		if operador[j]==codigo[i]:
 			if (j < 6)and(codigo[i+1]==operador[0]):
-				ramo = "["+operador[j]+", ,"+str(lin)+","+str(col)+"]\n"
+				ramo = "["+operador[j]+operador[0]+", ,"+str(lin)+","+str(col)+"]\n"
 				return i+2,ramo
 			if (j>3)and(j<8)and(codigo[i]==codigo[i+1]):
 				ramo = "["+operador[j] + operador[j]+", ,"+str(lin)+","+str(col)+"]\n"
