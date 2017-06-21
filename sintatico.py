@@ -36,5 +36,5 @@ tokens.remove("")
 i=0
 
 #COMEcA AQUI A leituraTokens
-programa(i,tokens)
+initPrograma(i,tokens)
 #i = E(i,tokens)
