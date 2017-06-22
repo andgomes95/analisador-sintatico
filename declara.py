@@ -12,10 +12,10 @@ def declara(i,simbolos):
         if(simbolos[i][0]==";"):
             return i
         else:
-            erro1()
+            erro(str(simbolos[i]))
             return i
     else:
-        erro0()
+        erro(str(simbolos[i]))
         return i
 def declara2(i,simbolos):
     if (simbolos[i][0]=="comma"):
@@ -26,7 +26,7 @@ def declara2(i,simbolos):
             else:
                 i = nextsimb(i)
         else:
-            erro0()
+            erro(str(simbolos[i]))
         i = declara2(i,simbolos)
         return i
     else:

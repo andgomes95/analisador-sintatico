@@ -2,7 +2,6 @@ from declara import *
 from atribui import *
 from repeti import *
 def initPrograma(i,simbolos):
-    print "ANAHIE"
     if (simbolos[i][1]=="int" and simbolos[i+1][1]=="main " and simbolos[i+2][0]=="("and simbolos[i+3][0]==")"and simbolos[i+4][0]=="{"):
 
         if i+1 < len(simbolos):
@@ -17,7 +16,7 @@ def initPrograma(i,simbolos):
                 i = nextsimb(i)
                 return i
             else:
-                erro("abacat1"+str(simbolos[i]))
+                erro(str(simbolos[i]))
                 return i
     elif simbolos[i][0]=="{":
         i=nextsimb(i)
@@ -27,10 +26,10 @@ def initPrograma(i,simbolos):
             i = nextsimb(i)
             return i
         else:
-            erro("abacat1"+str(simbolos[i]))
+            erro(str(simbolos[i]))
             return i
     else:
-        erro("abacat1"+str(simbolos[i]))
+        erro(str(simbolos[i]))
         return i
 def programa2(i,simbolos):
     #print str(simbolos[i])
@@ -43,19 +42,19 @@ def programa2(i,simbolos):
     elif simbolos[i][0]=="}"and i+1 == len(simbolos):
         return i
     else:
-        erro("abacate2")
+        erro(str(simbolos[i]))
     return i
 def programa(i,simbolos):
     if(simbolos[i][0]=="IDENTIFICADOR"):
         #print simbolos[i]
         i = atribui(i,simbolos)
         i = programa2(i,simbolos)
-        print str(i) +": finalizou aqui - atribuicao"
+#        print str(i) +": finalizou aqui - atribuicao"
         return i
     elif(simbolos[i][1]=="int" or simbolos[i][1]=="float" or simbolos[i][1]=="char"):
         i = declara(i,simbolos)
         i = programa2(i,simbolos)
-        print str(i) +": finalizou aqui - declaracao"
+    #    print str(i) +": finalizou aqui - declaracao"
         return i
     elif simbolos[i][1] == "while":
         #i = repeti(i,simbolos)
@@ -65,9 +64,9 @@ def programa(i,simbolos):
             i = initPrograma(i,simbolos)
     #        print str(simbolos[i])
         else:
-            erro("repeti")
+            erro("repeticao" + str(simbolos[i]))
         i = programa2(i,simbolos)
-        print str(i) +": finalizou aqui - while" + str(simbolos[i])
+    #    print str(i) +": finalizou aqui - while" + str(simbolos[i])
         return i
     elif simbolos[i][1] == "if":
         i = nextsimb(i)
@@ -76,14 +75,14 @@ def programa(i,simbolos):
             i = initPrograma(i,simbolos)
             #print str(simbolos[i])
         else:
-            erro("condicion")
+            erro("condicao" + str(simbolos[i]))
         i = programa2(i,simbolos)
-        print str(i) +": finalizou aqui - if" + str(simbolos[i])
+    #    print str(i) +": finalizou aqui - if" + str(simbolos[i])
         return i
     else:
         if simbolos[i][0] == "}":
             return i
-        erro("abacate3 "+str(simbolos[i])+" - "+str(i))
+        erro(+str(simbolos[i])+" - "+str(i))
         return i
 def nextsimb(i):
 	i = i+1

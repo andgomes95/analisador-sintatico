@@ -8,10 +8,9 @@ def atribui(i,simbolos):
             i = E(i,simbolos)
             return i
         else:
-            print str(i) + "bad"
-            erro()
+            erro(str(simbolos[i]))
             return i
     else:
         print i
-        erro()
+        erro(str(simbolos[i]))
         return i
