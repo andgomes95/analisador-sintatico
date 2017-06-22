@@ -29,8 +29,8 @@ while i!=len(tokens)-1:
 		i=i-1
 	if i!=len(tokens)-1:
 		i=i+1
-for i in range(len(tokens)-1):
-	print tokens[i]
+#for i in range(len(tokens)-1):
+	#print tokens[i]
 #	print len(tokens[i])
 tokens.remove("")
 i=0

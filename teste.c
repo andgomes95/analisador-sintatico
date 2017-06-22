@@ -7,5 +7,12 @@ int main(){
     a=2;
     b=50-a;
   }
-  char casa = "tilta nao"
+  if(casa ==2){
+    while(i==0){
+      int a = 2;
+    }
+  }
+    int b,c;
+  }
+  char casa = "tilta nao";
 }
