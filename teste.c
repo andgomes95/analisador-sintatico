@@ -12,7 +12,7 @@ int main(){
       int a = 2;
     }
   }
-    int b,c;
+    int b,a;
   }
   char casa = "tilta nao";
 }
