@@ -61,7 +61,7 @@ def programa(i,simbolos):
     elif simbolos[i][1] == "while":
         #i = repeti(i,simbolos)
         i = nextsimb(i)
-        i = E(i,simbolos)
+        i = E(i,simbolos,listIds)
         if(simbolos[i][0]=="{"):
             i = initPrograma(i,simbolos)
     #        print str(simbolos[i])
@@ -72,7 +72,7 @@ def programa(i,simbolos):
         return i
     elif simbolos[i][1] == "if":
         i = nextsimb(i)
-        i = E(i,simbolos)
+        i = E(i,simbolos,listIds)
         if(simbolos[i][0]=="{"):
             i = initPrograma(i,simbolos)
             #print str(simbolos[i])
@@ -125,10 +125,12 @@ def declara2(i,simbolos,tipo):
         return i
 def atribui(i,simbolos):
     if(simbolos[i][0]=="IDENTIFICADOR"):
+        if simbolos[i][1] not in listIds and simbolos[i][0] == "IDENTIFICADOR":
+            erro("Variavel "+simbolos[i][1]+" nao foi declarada. Erro na linha "+simbolos[i][2])
         i = nextsimb(i)
         if(simbolos[i][0]=="="):
             i = nextsimb(i)
-            i = E(i,simbolos)
+            i = E(i,simbolos,listIds)
             return i
         else:
             erro(str(simbolos[i]))
@@ -142,20 +144,20 @@ def addTabelaVarTipo(i,simbolos,tipo):
         if simbolos[i][1] not in listIds:
             listInt.append("["+tipo+","+simbolos[i][1]+","+simbolos[i][2]+"]")
             listIds.append(simbolos[i][1])
-            print listInt
         else:
-            print "O identificador "+simbolos[i][1]+" ja foi declarado. Declaracao dupla em "+simbolos[i][2]
+            print "O identificador "+simbolos[i][1]+" ja foi declarado. Declaracao dupla na linha "+simbolos[i][2]
+            erro("Dupla declaracao "+str(i))
     elif tipo=="float":
         if simbolos[i][1] not in listIds:
             listFloat.append("["+tipo+","+simbolos[i][1]+","+simbolos[i][2]+"]")
             listIds.append(simbolos[i][1])
-            print listFloat
         else:
-            print "O identificador "+simbolos[i][1]+" ja foi declarado. Declaracao dupla em "+simbolos[i][2]
+            print "O identificador "+simbolos[i][1]+" ja foi declarado. Declaracao dupla na linha "+simbolos[i][2]
+            erro("Dupla declaracao "+str(i))
     elif tipo=="char":
         if simbolos[i][1] not in listIds:
             listChar.append("["+tipo+","+simbolos[i][1]+","+simbolos[i][2]+"]")
             listIds.append(simbolos[i][1])
-            print listChar
         else:
-            print "O identificador "+simbolos[i][1]+" ja foi declarado. Declaracao dupla em "+simbolos[i][2]
+            print "O identificador "+simbolos[i][1]+" ja foi declarado. Declaracao dupla na linha "+simbolos[i][2]
+            erro("Dupla declaracao")

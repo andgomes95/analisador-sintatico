@@ -1,12 +1,15 @@
 import re
+import sys
+from program import *
 aceitaveis = ["+","-","*","/","IDENTIFICADOR","NUMERAL","LITERAL","||","&&","==","!=","<",">",]
 def erro(string):
 	print string
-def Tlinha(i,simbolos):
+	sys.exit
+def Tlinha(i,simbolos,listIds):
 	if(simbolos[i][0]=="*" or simbolos[i][0]=="/"):
 		i = nextsimb(i)
-		i = F(i,simbolos)
-		i = Tlinha(i,simbolos)
+		i = F(i,simbolos,listIds)
+		i = Tlinha(i,simbolos,listIds)
 		return i
 	elif(simbolos[i][0]=="<" or simbolos[i][0]==">" or simbolos[i][0]=="<=" or simbolos[i][0]==">=" or simbolos[i][0]=="+" or simbolos[i][0]=="-"or simbolos[i][0]=="||" or simbolos[i][0]=="&&" or simbolos[i][0]=="==" or simbolos[i][0]=="!=" or simbolos[i][0]==")"or simbolos[i][0] not in aceitaveis):
 		return i
@@ -15,11 +18,11 @@ def Tlinha(i,simbolos):
 		erro("Tlinha")
 		return i
 
-def Dlinha(i,simbolos):
+def Dlinha(i,simbolos,listIds):
 	if(simbolos[i][0]=="+" or simbolos[i][0]=="-"):
 		i = nextsimb(i)
-		i = T(i,simbolos)
-		i = Dlinha(i,simbolos)
+		i = T(i,simbolos,listIds)
+		i = Dlinha(i,simbolos,listIds)
 		return i
 	elif(simbolos[i][0]=="<" or simbolos[i][0]==">" or simbolos[i][0]=="<=" or simbolos[i][0]==">=" or simbolos[i][0]=="==" or simbolos[i][0]=="!=" or simbolos[i][0]==")" or simbolos[i][0]=="||" or simbolos[i][0]=="&&" or simbolos[i][0] not in aceitaveis):
 		return i
@@ -28,11 +31,11 @@ def Dlinha(i,simbolos):
 		return i
 
 
-def Clinha(i,simbolos):
+def Clinha(i,simbolos,listIds):
 	if(simbolos[i][0]=="<" or simbolos[i][0]==">" or simbolos[i][0]=="<=" or simbolos[i][0]==">="):
 		i = nextsimb(i)
-		i = D(i,simbolos)
-		i = Clinha(i,simbolos)
+		i = D(i,simbolos,listIds)
+		i = Clinha(i,simbolos,listIds)
 		return i
 	elif(simbolos[i][0]=="==" or simbolos[i][0]=="!=" or simbolos[i][0]==")" or simbolos[i][0]=="||" or simbolos[i][0]=="&&" or simbolos[i][0] not in aceitaveis):
 		return i
@@ -40,11 +43,11 @@ def Clinha(i,simbolos):
 		erro("Clinha")
 		return i
 
-def Blinha(i,simbolos):
+def Blinha(i,simbolos,listIds):
 	if(simbolos[i][0]=="==" or simbolos[i][0]=="!="):
 		i = nextsimb(i)
-		i = C(i,simbolos)
-		i = Blinha(i,simbolos)
+		i = C(i,simbolos,listIds)
+		i = Blinha(i,simbolos,listIds)
 		return i
 	elif(simbolos[i][0]==")" or simbolos[i][0]=="||" or simbolos[i][0]=="&&" or simbolos[i][0] not in aceitaveis):
 		return i
@@ -52,11 +55,11 @@ def Blinha(i,simbolos):
 		erro("Blinha")
 		return i
 
-def Alinha(i,simbolos):
+def Alinha(i,simbolos,listIds):
 	if(simbolos[i][0]=="&&"):
 		i = nextsimb(i)
-		i = B(i,simbolos)
-		i = Alinha(i,simbolos)
+		i = B(i,simbolos,listIds)
+		i = Alinha(i,simbolos,listIds)
 		return i
 	elif(simbolos[i][0]==")" or simbolos[i][0]=="||"  or simbolos[i][0] not in aceitaveis):
 		return i
@@ -65,11 +68,11 @@ def Alinha(i,simbolos):
 		return i
 
 
-def Elinha(i,simbolos):
+def Elinha(i,simbolos,listIds):
 	if(simbolos[i][0]=="||"):
 		i = nextsimb(i)
-		i = A(i,simbolos)
-		i = Elinha(i,simbolos)
+		i = A(i,simbolos,listIds)
+		i = Elinha(i,simbolos,listIds)
 		return i
 	elif(simbolos[i][0]==")"or simbolos[i][0] not in aceitaveis):
 		return i
@@ -77,71 +80,73 @@ def Elinha(i,simbolos):
 		erro("Elinha")
 		return i
 
-def F(i,simbolos):
+def F(i,simbolos,listIds):
 	if (simbolos[i][0]=="("):
 		i = nextsimb(i)
-		i = E(i,simbolos)
+		i = E(i,simbolos,listIds)
 		i = nextsimb(i)
 		return i
 		if(simbolos[i]!=")"):
 			erro("F")
 			return i
 	elif(simbolos[i][0]=="IDENTIFICADOR" or simbolos[i][0]=="LITERAL" or simbolos[i][0]=="NUMERAL"):
+		if simbolos[i][1] not in listIds and simbolos[i][0]=="IDENTIFICADOR":
+			erro("Variavel "+simbolos[i][1]+" nao foi declarada. Erro na linha "+simbolos[i][2])
 		i = nextsimb(i)
 		return i
 	else:
 		erro("F")
 		return i
 
-def T(i,simbolos):
+def T(i,simbolos,listIds):
 	if(simbolos[i][0]=="IDENTIFICADOR" or simbolos[i][0]=="LITERAL" or simbolos[i][0]=="NUMERAL" or simbolos[i][0]=="("):
-		i = F(i,simbolos)
-		i = Tlinha(i,simbolos)
+		i = F(i,simbolos,listIds)
+		i = Tlinha(i,simbolos,listIds)
 		return i
 	else:
 		erro("T")
 		return i
 
-def D(i,simbolos):
+def D(i,simbolos,listIds):
 	if(simbolos[i][0]=="IDENTIFICADOR" or simbolos[i][0]=="LITERAL" or simbolos[i][0]=="NUMERAL" or simbolos[i][0]=="("):
-		i = T(i,simbolos)
-		i = Dlinha(i,simbolos)
+		i = T(i,simbolos,listIds)
+		i = Dlinha(i,simbolos,listIds)
 		return i
 	else:
 		erro("D")
 		return i
 
-def C(i,simbolos):
+def C(i,simbolos,listIds):
 	if(simbolos[i][0]=="IDENTIFICADOR" or simbolos[i][0]=="LITERAL" or simbolos[i][0]=="NUMERAL" or simbolos[i][0]=="("):
-		i = D(i,simbolos)
-		i = Clinha(i,simbolos)
+		i = D(i,simbolos,listIds)
+		i = Clinha(i,simbolos,listIds)
 		return i
 	else:
 		erro("C")
 		return i
 
-def B(i,simbolos):
+def B(i,simbolos,listIds):
 	if(simbolos[i][0]=="IDENTIFICADOR" or simbolos[i][0]=="LITERAL" or simbolos[i][0]=="NUMERAL" or simbolos[i][0]=="("):
-		i = C(i,simbolos)
-		i = Blinha(i,simbolos)
+		i = C(i,simbolos,listIds)
+		i = Blinha(i,simbolos,listIds)
 		return i
 	else:
 		erro("B")
 		return i
 
-def A(i,simbolos):
+def A(i,simbolos,listIds):
 	if(simbolos[i][0]=="IDENTIFICADOR" or simbolos[i][0]=="LITERAL" or simbolos[i][0]=="NUMERAL" or simbolos[i][0]=="("):
-		i = B(i,simbolos)
-		i = Alinha(i,simbolos)
+		i = B(i,simbolos,listIds)
+		i = Alinha(i,simbolos,listIds)
 		return i
 	else:
 		erro("A")
 		return i
 
-def E(i,simbolos):
+def E(i,simbolos,listIds):
 	if (simbolos[i][0]=="IDENTIFICADOR" or simbolos[i][0]=="LITERAL" or simbolos[i][0]=="NUMERAL" or simbolos[i][0]=="("):
-		i = A(i,simbolos)
-		i = Elinha(i,simbolos)
+		i = A(i,simbolos,listIds)
+		i = Elinha(i,simbolos,listIds)
 		return i
 	else:
 		print i

@@ -34,7 +34,6 @@ while i!=len(tokens)-1:
 #	print len(tokens[i])
 tokens.remove("")
 i=0
-
 #COMEcA AQUI A leituraTokens
 initPrograma(i,tokens)
 #i = E(i,tokens)
