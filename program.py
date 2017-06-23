@@ -61,7 +61,7 @@ def programa(i,simbolos):
     elif simbolos[i][1] == "while":
         #i = repeti(i,simbolos)
         i = nextsimb(i)
-        i = E(i,simbolos,listIds)
+        i = E(i,simbolos,listIds,listFloat,listInt,listChar)
         if(simbolos[i][0]=="{"):
             i = initPrograma(i,simbolos)
     #        print str(simbolos[i])
@@ -72,7 +72,7 @@ def programa(i,simbolos):
         return i
     elif simbolos[i][1] == "if":
         i = nextsimb(i)
-        i = E(i,simbolos,listIds)
+        i = E(i,simbolos,listIds,listFloat,listInt,listChar)
         if(simbolos[i][0]=="{"):
             i = initPrograma(i,simbolos)
             #print str(simbolos[i])
@@ -130,7 +130,7 @@ def atribui(i,simbolos):
         i = nextsimb(i)
         if(simbolos[i][0]=="="):
             i = nextsimb(i)
-            i = E(i,simbolos,listIds)
+            i = E(i,simbolos,listIds,listFloat,listInt,listChar)
             return i
         else:
             erro(str(simbolos[i]))
