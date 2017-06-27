@@ -1,15 +1,23 @@
 import re
 import sys
 from program import *
+aux = 0
 aceitaveis = ["+","-","*","/","IDENTIFICADOR","NUMERAL","LITERAL","||","&&","==","!=","<",">",]
 def erro(string):
 	print string
 	sys.exit
 def Tlinha(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY):
-	if(simbolos[i][0]=="*" or simbolos[i][0]=="/"):
+	if(simbolos[i][0]=="*"):
 		i = nextsimb(i)
 		i,typeY = F(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
 		i,typeY = Tlinha(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
+#		gerarSimbolos("MUL",simbolos,i)
+		return i,typeY
+	elif (simbolos[i][0]=="/"):
+		i = nextsimb(i)
+		i,typeY = F(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
+		i,typeY = Tlinha(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
+#		gerarSimbolos("DIV",simbolos,i)
 		return i,typeY
 	elif(simbolos[i][0]=="<" or simbolos[i][0]==">" or simbolos[i][0]=="<=" or simbolos[i][0]==">=" or simbolos[i][0]=="+" or simbolos[i][0]=="-"or simbolos[i][0]=="||" or simbolos[i][0]=="&&" or simbolos[i][0]=="==" or simbolos[i][0]=="!=" or simbolos[i][0]==")"or simbolos[i][0] not in aceitaveis):
 		return i,typeY
@@ -19,10 +27,18 @@ def Tlinha(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY):
 		return i,typeY
 
 def Dlinha(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY):
-	if(simbolos[i][0]=="+" or simbolos[i][0]=="-"):
+	global aux
+	if(simbolos[i][0]=="+"):
 		i = nextsimb(i)
 		i,typeY = T(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
 		i,typeY = Dlinha(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
+		gerarSimbolos("ADD",simbolos,i)
+		return i,typeY
+	elif(simbolos[i][0]=="-"):
+		i = nextsimb(i)
+		i,typeY = T(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
+		i,typeY = Dlinha(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
+		gerarSimbolos("SUB",simbolos,i)
 		return i,typeY
 	elif(simbolos[i][0]=="<" or simbolos[i][0]==">" or simbolos[i][0]=="<=" or simbolos[i][0]==">=" or simbolos[i][0]=="==" or simbolos[i][0]=="!=" or simbolos[i][0]==")" or simbolos[i][0]=="||" or simbolos[i][0]=="&&" or simbolos[i][0] not in aceitaveis):
 		return i,typeY
@@ -81,6 +97,7 @@ def Elinha(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY):
 		return i,typeY
 
 def F(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY):
+	global aux
 	if (simbolos[i][0]=="("):
 		i = nextsimb(i)
 		i,typeY = E(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
@@ -93,7 +110,9 @@ def F(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY):
 		typei = checkDeclaracao(i,simbolos,listIds,listFloatId,listIntId,listCharId)
 		if typeY == "":
 			typeY = typei
+			gerarSimbolos("LOAD",simbolos,i)
 		elif typeY == typei:
+			gerarSimbolos("LOAD",simbolos,i)
 			pass
 		else:
 			erro("Declaracao errada no token "+simbolos[i][1]+" na linha "+simbolos[i][2])
@@ -180,3 +199,29 @@ def checkDeclaracao(i,simbolos,listIds,listFloatId,listIntId,listCharId):
 	elif simbolos[i][0]=="NUMERAL":
 		typei = "i"
 		return typei
+
+def gerarSimbolos(instrucao,simbolos,i):
+	global aux
+	if(instrucao=="LOAD"):
+		print "LOAD $t"+str(aux)+","+simbolos[i][1]
+		aux = aux +1
+	elif(instrucao=="ADD"):
+		print "ADD $t"+str(aux-2)+",$t"+str(aux-2)+",$t"+str(aux-1)
+		if aux -2 == 0:
+			aux = 1
+		aux = aux -1
+	elif(instrucao=="SUB"):
+		print "SUB $t"+str(aux-2)+",$t"+str(aux-2)+",$t"+str(aux-1)
+		if aux -2 == 0:
+			aux = 1
+		aux = aux -1
+#	elif(instrucao=="MUL"):
+#		print "MUL $t"+str(aux-2)+",$t"+str(aux-2)+",$t"+str(aux-1)
+#		if aux -2 == 0:
+#			aux = 1
+#		aux = aux -1
+#	elif(instrucao=="DIV"):
+#		print "DIV $t"+str(aux-2)+",$t"+str(aux-2)+",$t"+str(aux-1)
+#		if aux -2 == 0:
+#			aux = 1
+#		aux = aux -1
