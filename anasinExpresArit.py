@@ -207,21 +207,21 @@ def gerarSimbolos(instrucao,simbolos,i):
 		aux = aux +1
 	elif(instrucao=="ADD"):
 		print "ADD $t"+str(aux-2)+",$t"+str(aux-2)+",$t"+str(aux-1)
-		if aux -2 == 0:
-			aux = 1
+#		if aux -2 == 0:
+#			aux = 1
 		aux = aux -1
 	elif(instrucao=="SUB"):
 		print "SUB $t"+str(aux-2)+",$t"+str(aux-2)+",$t"+str(aux-1)
-		if aux -2 == 0:
-			aux = 1
+#		if aux -2 == 0:
+#			aux = 1
 		aux = aux -1
-#	elif(instrucao=="MUL"):
-#		print "MUL $t"+str(aux-2)+",$t"+str(aux-2)+",$t"+str(aux-1)
+	elif(instrucao=="MUL"):
+		print "MUL $t"+str(aux-2)+",$t"+str(aux-2)+",$t"+str(aux-1)
 #		if aux -2 == 0:
 #			aux = 1
-#		aux = aux -1
-#	elif(instrucao=="DIV"):
-#		print "DIV $t"+str(aux-2)+",$t"+str(aux-2)+",$t"+str(aux-1)
+		aux = aux -1
+	elif(instrucao=="DIV"):
+		print "DIV $t"+str(aux-2)+",$t"+str(aux-2)+",$t"+str(aux-1)
 #		if aux -2 == 0:
 #			aux = 1
-#		aux = aux -1
+		aux = aux -1
