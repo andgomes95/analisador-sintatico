@@ -4,6 +4,7 @@ import sys
 aux = 0
 aux2 = 0
 aux3 = 0
+putarq = []
 aceitaveis = ["+","-","*","/","IDENTIFICADOR","NUMERAL","LITERAL","||","&&","==","!=","<",">",]
 listInt = []
 listFloat = []
@@ -25,23 +26,26 @@ def initPrograma(i,simbolos):
 			i = programa(i,simbolos)
 			if  simbolos[i][0]=="}":
 				i = nextsimb(i)
+				arquivo = open('programa.asm', 'w')
+				arquivo.writelines(putarq)
+				arquivo.close
 				return i
 			else:
-				erro(str(simbolos[i]))
+				erro("Erro na linha"+str(simbolos[i][2]))
 				return i
 	elif simbolos[i][0]=="{":
 		i=nextsimb(i)
 		i = programa(i,simbolos)
 		if  simbolos[i][0]=="}":
 			aux2 = aux2 -1
-			print "label"+str(aux2)+":"
+			putarq.append("label"+str(aux2)+":\n")
 			i = nextsimb(i)
 			return i
 		else:
-			erro(str(simbolos[i]))
+			erro("Erro na linha"+str(simbolos[i][2]))
 			return i
 	else:
-		erro(str(simbolos[i]))
+		erro("Erro na linha"+str(simbolos[i][2]))
 		return i
 def programa2(i,simbolos):
 	if simbolos[i][0]==";" and i+1 < len(simbolos):
@@ -53,7 +57,7 @@ def programa2(i,simbolos):
 	elif simbolos[i][0]=="}"and i+1 == len(simbolos):
 		return i
 	else:
-		erro(str(simbolos[i]))
+		erro("Erro na linha"+str(simbolos[i][2]))
 	return i
 def programa(i,simbolos):
 	global aux
@@ -72,10 +76,10 @@ def programa(i,simbolos):
 
 		i = nextsimb(i)
 		typeY = ""
-		print "label"+str(aux2)+":"
+		putarq.append("label"+str(aux2)+":\n")
 		i,typeY = E(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
 		aux = 0
-		print "BNE 0,$t0,saida"+str(aux3)
+		putarq.append("BNE 0,$t0,saida"+str(aux3)+"\n")
 		aux2 =aux2+1
 		aux3 =aux3+1
 		if(simbolos[i][0]=="{"):
@@ -83,16 +87,16 @@ def programa(i,simbolos):
 		else:
 			erro("repeticao" + str(simbolos[i]))
 
-		print "j label"+str(aux2)
+		putarq.append("j label"+str(aux2)+"\n")
 		aux3 = aux3-1
-		print "saida"+str(aux3)+":"
+		putarq.append("saida"+str(aux3)+":\n")
 		i = programa2(i,simbolos)
 		return i
 	elif simbolos[i][1] == "if":
 		i = nextsimb(i)
 		typeY = ""
 		i,typeY = E(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
-		print "BEQ 0,$t0,label"+str(aux2)
+		putarq.append("BEQ 0,$t0,label"+str(aux2)+"\n")
 		aux2 =aux2+1
 		aux = 0
 		if(simbolos[i][0]=="{"):
@@ -123,10 +127,10 @@ def declara(i,simbolos):
 		if(simbolos[i][0]==";"):
 			return i
 		else:
-			erro(str(simbolos[i]))
+			erro("Erro na linha"+str(simbolos[i][2]))
 			return i
 	else:
-		erro(str(simbolos[i]))
+		erro("Erro na linha"+str(simbolos[i][2]))
 		return i
 def declara2(i,simbolos,tipo):
 	if (simbolos[i][0]=="comma"):
@@ -138,7 +142,7 @@ def declara2(i,simbolos,tipo):
 			else:
 				i = nextsimb(i)
 		else:
-			erro(str(simbolos[i]))
+			erro("Erro na linha"+str(simbolos[i][2]))
 		i = declara2(i,simbolos,tipo)
 		return i
 	else:
@@ -155,14 +159,14 @@ def atribui(i,simbolos):
 			i = nextsimb(i)
 			typeY = ""
 			i,typeY = E(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
-			print "STORE $t0,"+str(simb)
+			putarq.append("STORE $t0,"+str(simb)+"\n")
 			aux = 0
 			return i
 		else:
-			erro(str(simbolos[i]))
+			erro("Erro na linha"+str(simbolos[i][2]))
 			return i
 	else:
-		erro(str(simbolos[i]))
+		erro("Erro na linha"+str(simbolos[i][2]))
 		return i
 def addTabelaVarTipo(i,simbolos,tipo):
 	if tipo=="int":
@@ -171,7 +175,7 @@ def addTabelaVarTipo(i,simbolos,tipo):
 			listIntId.append(simbolos[i][1])
 			listIds.append(simbolos[i][1])
 		else:
-			print "O identificador "+simbolos[i][1]+" ja foi declarado. Declaracao dupla na linha "+simbolos[i][2]
+			erro("O identificador "+simbolos[i][1]+" ja foi declarado. Declaracao dupla na linha "+simbolos[i][2])
 			erro("Dupla declaracao "+str(i))
 	elif tipo=="float":
 		if simbolos[i][1] not in listIds:
@@ -179,7 +183,7 @@ def addTabelaVarTipo(i,simbolos,tipo):
 			listFloatId.append(simbolos[i][1])
 			listIds.append(simbolos[i][1])
 		else:
-			print "O identificador "+simbolos[i][1]+" ja foi declarado. Declaracao dupla na linha "+simbolos[i][2]
+			erro("O identificador "+simbolos[i][1]+" ja foi declarado. Declaracao dupla na linha "+simbolos[i][2])
 			erro("Dupla declaracao "+str(i))
 	elif tipo=="char":
 		if simbolos[i][1] not in listIds:
@@ -187,7 +191,7 @@ def addTabelaVarTipo(i,simbolos,tipo):
 			listCharId.append(simbolos[i][1])
 			listIds.append(simbolos[i][1])
 		else:
-			print "O identificador "+simbolos[i][1]+" ja foi declarado. Declaracao dupla na linha "+simbolos[i][2]
+			erro("O identificador "+simbolos[i][1]+" ja foi declarado. Declaracao dupla na linha "+simbolos[i][2])
 			erro("Dupla declaracao")
 
 
@@ -210,7 +214,6 @@ def Tlinha(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY):
 	elif(simbolos[i][0]=="<" or simbolos[i][0]==">" or simbolos[i][0]=="<=" or simbolos[i][0]==">=" or simbolos[i][0]=="+" or simbolos[i][0]=="-"or simbolos[i][0]=="||" or simbolos[i][0]=="&&" or simbolos[i][0]=="==" or simbolos[i][0]=="!=" or simbolos[i][0]==")"or simbolos[i][0] not in aceitaveis):
 		return i,typeY
 	else:
-		print i
 		erro("Tlinha")
 		return i,typeY
 
@@ -418,8 +421,8 @@ def checkDeclaracao(i,simbolos,listIds,listFloatId,listIntId,listCharId):
 def gerarSimbolos(instrucao,simbolos,i):
 	global aux
 	if(instrucao=="LOAD"):
-		print "LOAD $t"+str(aux)+","+simbolos[i][1]
+		putarq.append("LOAD $t"+str(aux)+","+simbolos[i][1]+"\n")
 		aux = aux +1
 	else:
-		print instrucao+" $t"+str(aux-2)+",$t"+str(aux-2)+",$t"+str(aux-1)
+		putarq.append(instrucao+" $t"+str(aux-2)+",$t"+str(aux-2)+",$t"+str(aux-1)+"\n")
 		aux = aux -1

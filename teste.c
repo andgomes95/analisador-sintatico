@@ -5,7 +5,7 @@ int main(){
   if(teste<40){
       teste = teste+2;
       while(teste > faca){
-          faca = faca +1;
+          faca = teste+1;
       }
   }
   int casa,vaca = teste, dinamica;
