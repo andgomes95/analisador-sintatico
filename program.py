@@ -176,7 +176,7 @@ def addTabelaVarTipo(i,simbolos,tipo):
 			listIds.append(simbolos[i][1])
 		else:
 			erro("O identificador "+simbolos[i][1]+" ja foi declarado. Declaracao dupla na linha "+simbolos[i][2])
-			erro("Dupla declaracao "+str(i))
+			erro("Dupla declaracao na linha "+str(simbolos[i][2]))
 	elif tipo=="float":
 		if simbolos[i][1] not in listIds:
 			listFloat.append("["+tipo+","+simbolos[i][1]+","+simbolos[i][2]+"]")
@@ -184,7 +184,7 @@ def addTabelaVarTipo(i,simbolos,tipo):
 			listIds.append(simbolos[i][1])
 		else:
 			erro("O identificador "+simbolos[i][1]+" ja foi declarado. Declaracao dupla na linha "+simbolos[i][2])
-			erro("Dupla declaracao "+str(i))
+			erro("Dupla declaracao na linha "+str(simbolos[i][2]))
 	elif tipo=="char":
 		if simbolos[i][1] not in listIds:
 			listChar.append("["+tipo+","+simbolos[i][1]+","+simbolos[i][2]+"]")
@@ -192,7 +192,7 @@ def addTabelaVarTipo(i,simbolos,tipo):
 			listIds.append(simbolos[i][1])
 		else:
 			erro("O identificador "+simbolos[i][1]+" ja foi declarado. Declaracao dupla na linha "+simbolos[i][2])
-			erro("Dupla declaracao")
+			erro("Dupla declaracao na linha "+str(simbolos[i][2]))
 
 
 def erro(string):

@@ -4,9 +4,9 @@ int main(){
   teste = teste*3+20;
   if(teste<40){
       teste = teste+2;
-      while(teste > faca){
-          faca = teste+1;
-      }
   }
+  float c;
+  a = c+faca;
+  int faca;
   int casa,vaca = teste, dinamica;
 }
