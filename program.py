@@ -2,6 +2,8 @@ from anasinExpresArit import *
 import re
 import sys
 aux = 0
+aux2 = 0
+aux3 = 0
 aceitaveis = ["+","-","*","/","IDENTIFICADOR","NUMERAL","LITERAL","||","&&","==","!=","<",">",]
 listInt = []
 listFloat = []
@@ -11,6 +13,7 @@ listFloatId = []
 listCharId = []
 listIntId = []
 def initPrograma(i,simbolos):
+	global aux2
 	if (simbolos[i][1]=="int" and simbolos[i+1][1]=="main " and simbolos[i+2][0]=="("and simbolos[i+3][0]==")"and simbolos[i+4][0]=="{"):
 
 		if i+1 < len(simbolos):
@@ -20,7 +23,6 @@ def initPrograma(i,simbolos):
 			i=nextsimb(i)
 			i=nextsimb(i)
 			i = programa(i,simbolos)
-		#    print(simbolos[i])
 			if  simbolos[i][0]=="}":
 				i = nextsimb(i)
 				return i
@@ -30,8 +32,9 @@ def initPrograma(i,simbolos):
 	elif simbolos[i][0]=="{":
 		i=nextsimb(i)
 		i = programa(i,simbolos)
-	#    print(simbolos[i])
 		if  simbolos[i][0]=="}":
+			aux2 = aux2 -1
+			print "label"+str(aux2)+":"
 			i = nextsimb(i)
 			return i
 		else:
@@ -41,7 +44,6 @@ def initPrograma(i,simbolos):
 		erro(str(simbolos[i]))
 		return i
 def programa2(i,simbolos):
-	#print str(simbolos[i])
 	if simbolos[i][0]==";" and i+1 < len(simbolos):
 		i=nextsimb(i)
 		i = programa(i,simbolos)
@@ -55,43 +57,50 @@ def programa2(i,simbolos):
 	return i
 def programa(i,simbolos):
 	global aux
+	global aux2
+	global aux3
 	if(simbolos[i][0]=="IDENTIFICADOR"):
-		#print simbolos[i]
 		i = atribui(i,simbolos)
 		i = programa2(i,simbolos)
-#        print str(i) +": finalizou aqui - atribuicao"
 		return i
 	elif(simbolos[i][1]=="int" or simbolos[i][1]=="float" or simbolos[i][1]=="char"):
 		i = declara(i,simbolos)
 		i = programa2(i,simbolos)
-	#    print str(i) +": finalizou aqui - declaracao"
 		return i
 	elif simbolos[i][1] == "while":
 		#i = repeti(i,simbolos)
+
 		i = nextsimb(i)
 		typeY = ""
+		print "label"+str(aux2)+":"
 		i,typeY = E(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
 		aux = 0
+		print "BNE 0,$t0,saida"+str(aux3)
+		aux2 =aux2+1
+		aux3 =aux3+1
 		if(simbolos[i][0]=="{"):
 			i = initPrograma(i,simbolos)
-	#        print str(simbolos[i])
 		else:
 			erro("repeticao" + str(simbolos[i]))
+
+		print "j label"+str(aux2)
+		aux3 = aux3-1
+		print "saida"+str(aux3)+":"
 		i = programa2(i,simbolos)
-	#    print str(i) +": finalizou aqui - while" + str(simbolos[i])
 		return i
 	elif simbolos[i][1] == "if":
 		i = nextsimb(i)
 		typeY = ""
 		i,typeY = E(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
+		print "BEQ 0,$t0,label"+str(aux2)
+		aux2 =aux2+1
 		aux = 0
 		if(simbolos[i][0]=="{"):
+
 			i = initPrograma(i,simbolos)
-			#print str(simbolos[i])
 		else:
 			erro("condicao" + str(simbolos[i]))
 		i = programa2(i,simbolos)
-	#    print str(i) +": finalizou aqui - if" + str(simbolos[i])
 		return i
 	else:
 		if simbolos[i][0] == "}":
@@ -110,7 +119,6 @@ def declara(i,simbolos):
 			i = atribui(i,simbolos)
 		else:
 			i = nextsimb(i)
-		#print i
 		i = declara2(i,simbolos,tipo)
 		if(simbolos[i][0]==";"):
 			return i
@@ -154,7 +162,6 @@ def atribui(i,simbolos):
 			erro(str(simbolos[i]))
 			return i
 	else:
-		print i
 		erro(str(simbolos[i]))
 		return i
 def addTabelaVarTipo(i,simbolos,tipo):
@@ -233,21 +240,25 @@ def Clinha(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY):
 		i = nextsimb(i)
 		i,typeY = D(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
 		i,typeY = Clinha(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
+		gerarSimbolos("MEN",simbolos,i)
 		return i,typeY
 	elif simbolos[i][0]==">":
 		i = nextsimb(i)
 		i,typeY = D(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
 		i,typeY = Clinha(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
+		gerarSimbolos("MAI",simbolos,i)
 		return i,typeY
 	elif simbolos[i][0]=="<=":
 		i = nextsimb(i)
 		i,typeY = D(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
 		i,typeY = Clinha(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
+		gerarSimbolos("MENI",simbolos,i)
 		return i,typeY
 	elif simbolos[i][0]==">=":
 		i = nextsimb(i)
 		i,typeY = D(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
 		i,typeY = Clinha(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
+		gerarSimbolos("MAII",simbolos,i)
 		return i,typeY
 	elif(simbolos[i][0]=="==" or simbolos[i][0]=="!=" or simbolos[i][0]==")" or simbolos[i][0]=="||" or simbolos[i][0]=="&&" or simbolos[i][0] not in aceitaveis):
 		return i,typeY
@@ -260,11 +271,13 @@ def Blinha(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY):
 		i = nextsimb(i)
 		i,typeY = C(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
 		i,typeY = Blinha(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
+		gerarSimbolos("EQUAL",simbolos,i)
 		return i,typeY
 	elif simbolos[i][0]=="!=":
 		i = nextsimb(i)
 		i,typeY = C(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
 		i,typeY = Blinha(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
+		gerarSimbolos("NEQUAL",simbolos,i)
 		return i,typeY
 	elif(simbolos[i][0]==")" or simbolos[i][0]=="||" or simbolos[i][0]=="&&" or simbolos[i][0] not in aceitaveis):
 		return i,typeY
@@ -277,6 +290,7 @@ def Alinha(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY):
 		i = nextsimb(i)
 		i,typeY = B(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
 		i,typeY = Alinha(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
+		gerarSimbolos("AND",simbolos,i)
 		return i,typeY
 	elif(simbolos[i][0]==")" or simbolos[i][0]=="||"  or simbolos[i][0] not in aceitaveis):
 		return i,typeY
@@ -290,6 +304,7 @@ def Elinha(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY):
 		i = nextsimb(i)
 		i,typeY = A(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
 		i,typeY = Elinha(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
+		gerarSimbolos("OR",simbolos,i)
 		return i,typeY
 	elif(simbolos[i][0]==")"or simbolos[i][0] not in aceitaveis):
 		return i,typeY
@@ -376,7 +391,6 @@ def E(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY):
 		i,typeY = Elinha(i,simbolos,listIds,listFloatId,listIntId,listCharId,typeY)
 		return i,typeY
 	else:
-		print i
 		erro("E")
 		return i,typeY
 def nextsimb(i):
@@ -406,15 +420,6 @@ def gerarSimbolos(instrucao,simbolos,i):
 	if(instrucao=="LOAD"):
 		print "LOAD $t"+str(aux)+","+simbolos[i][1]
 		aux = aux +1
-	elif(instrucao=="ADD"):
-		print "ADD $t"+str(aux-2)+",$t"+str(aux-2)+",$t"+str(aux-1)
-		aux = aux -1
-	elif(instrucao=="SUB"):
-		print "SUB $t"+str(aux-2)+",$t"+str(aux-2)+",$t"+str(aux-1)
-		aux = aux -1
-	elif(instrucao=="MUL"):
-		print "MUL $t"+str(aux-2)+",$t"+str(aux-2)+",$t"+str(aux-1)
-		aux = aux -1
-	elif(instrucao=="DIV"):
-		print "DIV $t"+str(aux-2)+",$t"+str(aux-2)+",$t"+str(aux-1)
+	else:
+		print instrucao+" $t"+str(aux-2)+",$t"+str(aux-2)+",$t"+str(aux-1)
 		aux = aux -1
